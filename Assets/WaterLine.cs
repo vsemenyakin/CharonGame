@@ -14,16 +14,21 @@
 using UnityEngine;
 using System.Collections;
 
-public struct WaterLinePart
+public class WaterLinePart
 {
+  public float _heightOld;
+  public float _heightNew;
+  public float _speed;
+
+  public float _flow;
+  public BuoyancyEffector2D _effector;
+
   public float height;
   public float velocity;
   public GameObject gameObject;
   public Mesh mesh;
   public Vector2 boundsMin;
   public Vector2 boundsMax;
-
-  
 }
 
 public class WaterLine : MonoBehaviour
@@ -68,55 +73,51 @@ public class WaterLine : MonoBehaviour
     parts = new WaterLinePart[size];
 
     // we'll use spheres to represent each vertex for demonstration purposes
-    for (int i = 0; i < size; i++)
-    {
-      // Create a game object
-			GameObject go = new  GameObject("WavePart");
-			//go.gameObject.AddComponent("BoxCollider2D");
-			PolygonCollider2D polygonCollider2D = go.AddComponent<PolygonCollider2D>();
-			//boxCollider2D.size = new Vector2(10,10);
-			//boxCollider2D.center = new Vector2(10,10);
-			//
-			polygonCollider2D.isTrigger = true;
-			polygonCollider2D.usedByEffector = true;
+    for (int i = 0; i < size; i++) {
 
+      parts[i] = new WaterLinePart();
 
-      		go.transform.parent = this.transform;
-      		go.transform.localPosition = new Vector3(i - (size / 2), 0, 0);
+	  GameObject theGameObject = new GameObject("WavePart");
 
-			BuoyancyEffector2D theEffector = go.AddComponent<BuoyancyEffector2D>();
+      //Water interaction
+	  PolygonCollider2D polygonCollider2D = theGameObject.AddComponent<PolygonCollider2D>();
+      polygonCollider2D.isTrigger = true;
+      polygonCollider2D.usedByEffector = true;
+	
+      theGameObject.transform.parent = this.transform;
+      theGameObject.transform.localPosition = new Vector3(i - size/2, 0, 0);
 
-      		parts[i].gameObject = go;
+      BuoyancyEffector2D theEffector = theGameObject.AddComponent<BuoyancyEffector2D>();
+	  parts[i]._effector = theEffector;
+
+	  //Generate mesh
+      Mesh mesh = new Mesh();
+	  
+	  mesh.MarkDynamic();
+	  parts[i].mesh = mesh;
+
+	  theGameObject.AddComponent<MeshFilter>();
+	  theGameObject.AddComponent<MeshRenderer>();
+
+	  theGameObject.GetComponent<MeshFilter>().mesh = mesh;
+	  theGameObject.GetComponent<MeshRenderer>().material = material;
+
+      parts[i].gameObject = theGameObject;
+
+	  parts[i]._heightOld = 0.0f;
+	  parts[i]._heightNew = 0.0f;
     }
 
-    // Create the meshes
-    for (int i = 0; i < size; i++)
-    {
-      GameObject go = parts[i].gameObject;
+	for (int i = 0; i < size - 1; i++) {
+	  // Define vertices for the mesh (the points of the model)
+      UpdateMeshVertices(i);
 
-      // Except for the last point
-      if (i < size - 1)
-      {
-        Mesh mesh = new Mesh();
-        mesh.MarkDynamic();
-        parts[i].mesh = mesh;
-
-        go.AddComponent<MeshFilter>();
-        go.AddComponent<MeshRenderer>();
-
-        // Define vertices for the mesh (the points of the model)
-        UpdateMeshVertices(i);
-
-        // Define triangles and normals
-        InitializeTrianglesAndNormalsForMesh(i);
-
-        go.GetComponent<MeshFilter>().mesh = mesh;
-        go.GetComponent<MeshRenderer>().material = material;
-      }
-    }
+      // Define triangles and normals
+      InitializeTrianglesAndNormalsForMesh(i);      
+	}
 
     // Small wave
-    Splash(size / 2, 10);
+    //Splash(size / 2, 10);
   }
 
 #if UNITY_EDITOR
@@ -143,8 +144,7 @@ public class WaterLine : MonoBehaviour
     Transform current = parts[i].gameObject.transform;
 
     Transform next = current;
-    if (i < parts.Length - 1)
-    {
+    if (i < parts.Length - 1) {
       next = parts[i + 1].gameObject.transform;
     }
 
@@ -163,12 +163,12 @@ public class WaterLine : MonoBehaviour
 		pointsCollider = new Vector2[]{new Vector2 (left.x, left.y),new Vector2 (right.x, right.y), new Vector2 (right.x, right.y + (0 - Height)), new Vector2 (left.x, left.y + (0 - Height))};
 		polygonCollider.SetPath(0, pointsCollider);
 
-
-
     mesh.vertices = new Vector3[] { topLeftFront, topRightFront, topLeftBack, topRightBack, bottomLeftFront, bottomRightFront };
 
     parts[i].boundsMin = topLeftFront + current.position;
     parts[i].boundsMax = bottomRightFront + current.position;
+
+    parts[i]._effector.flowMagnitude = parts[i]._flow;
   }
 
   private void InitializeTrianglesAndNormalsForMesh(int i)
@@ -178,11 +178,11 @@ public class WaterLine : MonoBehaviour
 
     // Normals
     var uvs = new Vector2[mesh.vertices.Length];
-		Debug.Log (uvs);
+		//Debug.Log (uvs);
     for (int i2 = 0; i2 < uvs.Length; i2++)
     {
       uvs[i2] = new Vector2(mesh.vertices[i2].x, mesh.vertices[i2].z);
-			Debug.Log (mesh.vertices [i2].x);
+			//Debug.Log (mesh.vertices [i2].x);
     }
     mesh.uv = uvs;
 
@@ -207,7 +207,7 @@ public class WaterLine : MonoBehaviour
     if (cleanRequested)
     {
       cleanRequested = false;
-      Debug.Log("Reinitializing water. Make sure we are in editor mode!");
+      //Debug.Log("Reinitializing water. Make sure we are in editor mode!");
       Clear();
       Initialize();
     }
@@ -220,6 +220,46 @@ public class WaterLine : MonoBehaviour
 
 #endif
 
+	//Update model state
+	for (int i = 1; i < size - 1; i++) {
+      WaterLinePart theBeforePart = parts[i - 1];
+	  WaterLinePart thePart = parts[i];
+	  WaterLinePart theAfterPart = parts[i + 1];
+	
+      float theBeforeDelta = theBeforePart._heightOld - thePart._heightOld;
+      float theAfterDelta = theAfterPart._heightOld - thePart._heightOld;
+
+      thePart._speed *= 0.99f;
+
+      float theForce = theBeforeDelta * 0.5f + theAfterDelta * 0.5f;
+	  thePart._speed += theForce * 0.1f;
+
+      thePart._heightNew = thePart._heightOld + thePart._speed;
+    }
+
+    //Update view
+    for (int i = 0; i < size; i++) {
+      // Update the dot position
+      Vector3 newPosition = new Vector3(
+          parts[i].gameObject.transform.localPosition.x,
+          parts[i]._heightNew,
+          parts[i].gameObject.transform.localPosition.z);
+      parts[i].gameObject.transform.localPosition = newPosition;
+    }
+
+	//Prepare next model state
+    for (int i = 0; i < size; i++) {
+       parts[i]._heightOld = parts[i]._heightNew;
+    }
+
+    // Update meshes
+    for (int i = 0; i < size; i++) {
+      UpdateMeshVertices(i);
+    }
+
+	return;
+
+	//=========================================================================================
     // Water tension is simulated by a simple linear convolution over the height field.
     for (int i = 1; i < size - 1; i++)
     {
@@ -234,6 +274,8 @@ public class WaterLine : MonoBehaviour
       int j = i - 1;
       int k = i + 1;
       parts[i].height = (parts[i].gameObject.transform.localPosition.y + parts[j].gameObject.transform.localPosition.y + parts[k].gameObject.transform.localPosition.y) / 3.0f;
+
+	  //parts[i].flow = (parts[i].flow + parts[j].flow - parts[k].flow) / 3.0f;
     }
 
     // Velocity and height are updated... 
@@ -289,12 +331,17 @@ public class WaterLine : MonoBehaviour
 
   private void Splash(int i, int heightModifier)
   {
-    parts[i].gameObject.transform.localPosition = new Vector3(
-      parts[i].gameObject.transform.localPosition.x,
-      parts[i].gameObject.transform.localPosition.y + heightModifier,
-      parts[i].gameObject.transform.localPosition.z
-      );
-  }
+        //parts[i].gameObject.transform.localPosition = new Vector3(
+        //  parts[i].gameObject.transform.localPosition.x,
+        //  parts[i].gameObject.transform.localPosition.y + heightModifier,
+        //  parts[i].gameObject.transform.localPosition.z
+        //  );
+
+        parts[i]._heightOld = 3;
+
+
+    //parts[i].flow = 30;
+    }
 
   #endregion
 }
