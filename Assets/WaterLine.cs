@@ -48,6 +48,10 @@ public class WaterLine : MonoBehaviour
   public Material material;
   public Color color = Color.blue;
 
+  //Other
+  public float idleWavesPower = 0.0f;
+  public float idleWavesIntensity = 0.0f;
+
   //Inner state
   private WaterLinePart[] parts;
 
@@ -199,6 +203,12 @@ public class WaterLine : MonoBehaviour
 
     // Update meshes
     for (int i = 0, size = parts.Length; i < size; i++) UpdateMeshVertices(i);
+
+	//Add idle waves
+
+	if (Random.value < idleWavesIntensity) {
+		Splash(-width/2 + Random.value * width, idleWavesPower * Random.value);
+	}
   }
 
   #region Interaction
