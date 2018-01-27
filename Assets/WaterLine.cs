@@ -228,7 +228,7 @@ public class WaterLine : MonoBehaviour
 
   public void Splash(float inX, float inHeight) {
     int theIndex = getPartIndexByPosition(inX);
-    if (theIndex < 0 || theIndex > parts.Length) return;
+    if (theIndex < 1 || theIndex >= parts.Length-1) return;
 
     //parts[theIndex-1]._heightOld = -inHeight/2;
     //parts[theIndex]._heightOld = -inHeight;
