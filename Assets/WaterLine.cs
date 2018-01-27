@@ -20,6 +20,7 @@ public class WaterLinePart
   public float _heightNew;
   public float _speed;
 
+  public float _flowOld;
   public float _flow;
   public BuoyancyEffector2D _effector;
 
@@ -131,8 +132,6 @@ public class WaterLine : MonoBehaviour
 
     parts[i].boundsMin = topLeftFront+current.position;
     parts[i].boundsMax = bottomRightFront+current.position;
-
-    parts[i]._effector.flowMagnitude = parts[i]._flow;
   }
 
   private void InitializeTrianglesAndNormalsForMesh(int i) {
@@ -168,9 +167,14 @@ public class WaterLine : MonoBehaviour
       //Update speed
       thePart._speed *= (1.0f-disasiasion);
 	  thePart._speed += theForce/partMass;
+      //thePart._speed = (thePart._speed<0.1f && thePart._speed>-0.1f ? 0.0f : thePart._speed);
 
       //Update next position
       thePart._heightNew = thePart._heightOld+thePart._speed;
+
+      //Update flow
+      thePart._flow = (theBeforePart._flowOld + thePart._flowOld + theAfterPart._flowOld)/3.0f;
+      //thePart._flow = (thePart._flow<0.1f && thePart._flow>-0.1f ? 0.0f : thePart._flow);
     }
     
     //Update view
@@ -187,7 +191,11 @@ public class WaterLine : MonoBehaviour
     }
 
 	//Prepare next model state
-    for (int i = 0, size = parts.Length; i < size; i++) parts[i]._heightOld = parts[i]._heightNew;
+    for (int i = 0, size = parts.Length; i < size; i++) {
+        parts[i]._heightOld = parts[i]._heightNew;
+        parts[i]._effector.flowMagnitude = parts[i]._flow;
+        parts[i]._flowOld = parts[i]._flow;
+    }
 
     // Update meshes
     for (int i = 0, size = parts.Length; i < size; i++) UpdateMeshVertices(i);
@@ -226,11 +234,11 @@ public class WaterLine : MonoBehaviour
         int theGauseIndex = theIndex + i;
         if (theGauseIndex < 1 || theGauseIndex >= parts.Length - 1) continue;
 
-        Debug.Log(theGauseIndex + " : " + i);
-
         parts[theGauseIndex]._heightOld = i*i*theCoefficient*partSize - theSplashHeight;
     }
-    //parts[i].flow = 30;
+    
+    parts[theIndex - 1]._flowOld = -100*inHeight;
+    parts[theIndex + 1]._flowOld = 100*inHeight;
   }
 
   private int getPartIndexByPosition(float inPosition) {
