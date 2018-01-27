@@ -152,8 +152,8 @@ public class WaterLine : MonoBehaviour
   void Update() {
 
     //Debug
-    //if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 1.0f);
-
+    if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 3.0f);
+    
 	//Update model state
 	for (int i = 1, size = parts.Length; i < size-1; i++) {
       WaterLinePart theBeforePart = parts[i-1];
@@ -166,20 +166,23 @@ public class WaterLine : MonoBehaviour
       float theForce = theBeforeDelta+theAfterDelta;
             
       //Update speed
-      thePart._speed *= (1.0f - disasiasion);
-	  thePart._speed += theForce / partMass;
+      thePart._speed *= (1.0f-disasiasion);
+	  thePart._speed += theForce/partMass;
 
       //Update next position
       thePart._heightNew = thePart._heightOld+thePart._speed;
     }
-
+    
     //Update view
     for (int i = 0, size = parts.Length; i<size; i++) {
+
+      //parts[i]._heightNew = parts[i]._heightOld;
+
       // Update the dot position
       Vector3 newPosition = new Vector3(
-          parts[i].gameObject.transform.localPosition.x,
-          parts[i]._heightNew,
-          parts[i].gameObject.transform.localPosition.z);
+      parts[i].gameObject.transform.localPosition.x,
+      parts[i]._heightNew,
+      parts[i].gameObject.transform.localPosition.z);
       parts[i].gameObject.transform.localPosition = newPosition;
     }
 
@@ -209,10 +212,24 @@ public class WaterLine : MonoBehaviour
     int theIndex = getPartIndexByPosition(inX);
     if (theIndex < 0 || theIndex > parts.Length) return;
 
-    parts[theIndex-1]._heightOld = -inHeight/2;
-    parts[theIndex]._heightOld = -inHeight;
-    parts[theIndex+1]._heightOld = -inHeight/2;
+    //parts[theIndex-1]._heightOld = -inHeight/2;
+    //parts[theIndex]._heightOld = -inHeight;
+    //parts[theIndex+1]._heightOld = -inHeight/2;
 
+    const float theSplashWidth = 1.0f;
+    float theSplashHeight = inHeight;
+
+    int theGauseSize = (int)(theSplashWidth/partSize);
+    float theCoefficient = inHeight/(theSplashWidth*theSplashWidth*4);
+    
+    for (int i = -theGauseSize/2; i < theGauseSize/2; ++i) {
+        int theGauseIndex = theIndex + i;
+        if (theGauseIndex < 1 || theGauseIndex >= parts.Length - 1) continue;
+
+        Debug.Log(theGauseIndex + " : " + i);
+
+        parts[theGauseIndex]._heightOld = i*i*theCoefficient*partSize - theSplashHeight;
+    }
     //parts[i].flow = 30;
   }
 

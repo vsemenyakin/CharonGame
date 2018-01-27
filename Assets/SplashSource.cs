@@ -17,9 +17,9 @@ public class SplashSource : MonoBehaviour {
             var theRigid = GetComponent<Rigidbody2D>();
             float theSpeed = theRigid.velocity.magnitude;
 
-            if (theSpeed > 0.5f) {
+            if (theSpeed > 3.0f) {
                 var theWaterScript = other.gameObject.transform.parent.gameObject.GetComponent<WaterLine>();
-                theWaterScript.Splash(transform.position.x, theSpeed / 10.0f);
+                theWaterScript.Splash(transform.position.x, theSpeed / 5.0f);
             }
         }
     }		
