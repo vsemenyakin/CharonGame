@@ -44,6 +44,8 @@ public class WaterLine : MonoBehaviour
   public float partMass = 10f;
   public float disasiasion = 0.01f;
 
+  public float defaultFlow = 0.0f;
+
   //Graphics
   public Material material;
   public Color color = Color.blue;
@@ -193,7 +195,7 @@ public class WaterLine : MonoBehaviour
 	//Prepare next model state
     for (int i = 0, size = parts.Length; i < size; i++) {
         parts[i]._heightOld = parts[i]._heightNew;
-        parts[i]._effector.flowMagnitude = parts[i]._flow;
+		parts[i]._effector.flowMagnitude = defaultFlow + parts[i]._flow;
         parts[i]._flowOld = parts[i]._flow;
     }
 
