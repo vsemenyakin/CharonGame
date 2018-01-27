@@ -306,11 +306,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea390a3f08fae014795e58746e140b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocityDamping: 0.99999
   partSize: 1
   width: 100
   height: 10
   timeScale: 25
+  partMass: 10
+  disasiasion: 0.05
   material: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   color: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &388032902

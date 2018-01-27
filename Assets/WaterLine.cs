@@ -33,8 +33,6 @@ public class WaterLinePart
 
 public class WaterLine : MonoBehaviour
 {
-  public float velocityDamping = 0.999999f; // Proportional velocity damping, must be less than or equal to 1.
-
   //Geometry
   public float partSize = 1f;
   public float width = 100f;
@@ -42,6 +40,8 @@ public class WaterLine : MonoBehaviour
 
   //Physics  
   public float timeScale = 25f;
+  public float partMass = 10f;
+  public float disasiasion = 0.01f;
 
   //Graphics
   public Material material;
@@ -121,7 +121,10 @@ public class WaterLine : MonoBehaviour
     Vector3 bottomRightFront = new Vector3(right.x, right.y + (0 - height), 0);
 
     PolygonCollider2D polygonCollider = parts [i].gameObject.GetComponent<PolygonCollider2D> ();
-    Vector2[] pointsCollider = new Vector2[]{new Vector2 (left.x, left.y),new Vector2 (right.x, right.y), new Vector2 (right.x, right.y + (0 - height)), new Vector2 (left.x, left.y + (0 - height))};
+    Vector2[] pointsCollider = new Vector2[]{
+        new Vector2 (left.x, left.y), new Vector2 (right.x, right.y),
+        new Vector2 (right.x, right.y + (0 - height)), new Vector2 (left.x, left.y + (0 - height))
+    };
     polygonCollider.SetPath(0, pointsCollider);
 
     mesh.vertices = new Vector3[] { topLeftFront, topRightFront, topLeftBack, topRightBack, bottomLeftFront, bottomRightFront };
@@ -149,7 +152,7 @@ public class WaterLine : MonoBehaviour
   void Update() {
 
     //Debug
-    if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 1.0f);
+    //if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 1.0f);
 
 	//Update model state
 	for (int i = 1, size = parts.Length; i < size-1; i++) {
@@ -163,8 +166,8 @@ public class WaterLine : MonoBehaviour
       float theForce = theBeforeDelta+theAfterDelta;
             
       //Update speed
-      thePart._speed *= 0.99f;
-	  thePart._speed += theForce*0.005f;
+      thePart._speed *= (1.0f - disasiasion);
+	  thePart._speed += theForce / partMass;
 
       //Update next position
       thePart._heightNew = thePart._heightOld+thePart._speed;
