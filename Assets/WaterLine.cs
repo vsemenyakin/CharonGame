@@ -34,119 +34,80 @@ public class WaterLinePart
 public class WaterLine : MonoBehaviour
 {
   public float velocityDamping = 0.999999f; // Proportional velocity damping, must be less than or equal to 1.
+
+  //Geometry
+  public float partSize = 1f;
+  public float width = 100f;
+  public float height = 10f;
+
+  //Physics  
   public float timeScale = 25f;
 
-  public int Width = 50;
-  public float Height = 10f;
+  //Graphics
   public Material material;
   public Color color = Color.blue;
 
+  //Inner state
   private WaterLinePart[] parts;
 
-  private int size;
-  private float currentHeight;
+  void Start() { Initialize(); }
 
-  public Vector2[] pointsCollider;
-
-#if UNITY_EDITOR
-  private bool cleanRequested;
-#endif
-
-  void Start()
-  {
-
-#if UNITY_EDITOR
-    // Remove what we see from the editor
-    Clear();
-#endif
-
-    Initialize();
-  }
-
-  private void Initialize()
-  {
-    size = Width;
-    currentHeight = Height;
-
+  private void Initialize() {
+    //Setup global state
     material.color = color;
+    int thePartsCount = (int)(width/partSize);
+    
+    parts = new WaterLinePart[thePartsCount];
 
-    parts = new WaterLinePart[size];
+    //Generate parts
+    for (int i = 0; i < thePartsCount; i++) {
+      
+      //Object & geometry
+	  GameObject theGameObject = new GameObject("WavePart_" + i);
+      theGameObject.tag = "waterPart";
+      theGameObject.transform.parent = this.transform;
+      theGameObject.transform.localPosition = new Vector3(i*partSize-width/2, 0, 0);
 
-    // we'll use spheres to represent each vertex for demonstration purposes
-    for (int i = 0; i < size; i++) {
-
-      parts[i] = new WaterLinePart();
-
-	  GameObject theGameObject = new GameObject("WavePart");
-
-      //Water interaction
+      //Physics
 	  PolygonCollider2D polygonCollider2D = theGameObject.AddComponent<PolygonCollider2D>();
       polygonCollider2D.isTrigger = true;
       polygonCollider2D.usedByEffector = true;
-	
-      theGameObject.transform.parent = this.transform;
-      theGameObject.transform.localPosition = new Vector3(i - size/2, 0, 0);
 
       BuoyancyEffector2D theEffector = theGameObject.AddComponent<BuoyancyEffector2D>();
-	  parts[i]._effector = theEffector;
 
-	  //Generate mesh
+	  //Graphics
       Mesh mesh = new Mesh();
-	  
 	  mesh.MarkDynamic();
-	  parts[i].mesh = mesh;
 
-	  theGameObject.AddComponent<MeshFilter>();
-	  theGameObject.AddComponent<MeshRenderer>();
+	  theGameObject.AddComponent<MeshFilter>().mesh = mesh;
+	  theGameObject.AddComponent<MeshRenderer>().material = material;
 
-	  theGameObject.GetComponent<MeshFilter>().mesh = mesh;
-	  theGameObject.GetComponent<MeshRenderer>().material = material;
-
-      parts[i].gameObject = theGameObject;
-
+      //Setup part
+      parts[i] = new WaterLinePart();
+      
 	  parts[i]._heightOld = 0.0f;
 	  parts[i]._heightNew = 0.0f;
+      parts[i]._speed = 0.0f;
+	  parts[i]._effector = theEffector;
+
+      parts[i].mesh = mesh;
+      parts[i].gameObject = theGameObject;
     }
 
-	for (int i = 0; i < size - 1; i++) {
-	  // Define vertices for the mesh (the points of the model)
+	for (int i = 0; i < thePartsCount; i++) {
       UpdateMeshVertices(i);
-
-      // Define triangles and normals
       InitializeTrianglesAndNormalsForMesh(i);      
 	}
-
-    // Small wave
-    //Splash(size / 2, 10);
   }
 
-#if UNITY_EDITOR
-  /// <summary>
-  /// SUPER VIOLENT METHOD FOR EDITOR MODE
-  /// </summary>
-  private void Clear()
-  {
-    for (int i = 0; i < size; i++)
-    {
-      DestroyImmediate(parts[i].mesh);
-      DestroyImmediate(parts[i].gameObject);
-    }
-
-    parts = null;
-  }
-#endif
-
-  private void UpdateMeshVertices(int i)
-  {
+  private void UpdateMeshVertices(int i) {
     Mesh mesh = parts[i].mesh;
     if (mesh == null) return;
 
     Transform current = parts[i].gameObject.transform;
 
     Transform next = current;
-    if (i < parts.Length - 1) {
-      next = parts[i + 1].gameObject.transform;
-    }
+    if (i < parts.Length-1) next = parts[i+1].gameObject.transform;
 
     Vector3 left = Vector3.zero;
     Vector3 right = next.localPosition - current.localPosition;
@@ -156,89 +117,61 @@ public class WaterLine : MonoBehaviour
     Vector3 topRightFront = new Vector3(right.x, right.y, 0);
     Vector3 topLeftBack = new Vector3(left.x, left.y, 1);
     Vector3 topRightBack = new Vector3(right.x, right.y, 1);
-    Vector3 bottomLeftFront = new Vector3(left.x, left.y + (0 - Height), 0);
-    Vector3 bottomRightFront = new Vector3(right.x, right.y + (0 - Height), 0);
-		//Debug.Log (topRightFront);
-		PolygonCollider2D polygonCollider = parts [i].gameObject.GetComponent<PolygonCollider2D> ();
-		pointsCollider = new Vector2[]{new Vector2 (left.x, left.y),new Vector2 (right.x, right.y), new Vector2 (right.x, right.y + (0 - Height)), new Vector2 (left.x, left.y + (0 - Height))};
-		polygonCollider.SetPath(0, pointsCollider);
+    Vector3 bottomLeftFront = new Vector3(left.x, left.y + (0 - height), 0);
+    Vector3 bottomRightFront = new Vector3(right.x, right.y + (0 - height), 0);
+
+    PolygonCollider2D polygonCollider = parts [i].gameObject.GetComponent<PolygonCollider2D> ();
+    Vector2[] pointsCollider = new Vector2[]{new Vector2 (left.x, left.y),new Vector2 (right.x, right.y), new Vector2 (right.x, right.y + (0 - height)), new Vector2 (left.x, left.y + (0 - height))};
+    polygonCollider.SetPath(0, pointsCollider);
 
     mesh.vertices = new Vector3[] { topLeftFront, topRightFront, topLeftBack, topRightBack, bottomLeftFront, bottomRightFront };
 
-    parts[i].boundsMin = topLeftFront + current.position;
-    parts[i].boundsMax = bottomRightFront + current.position;
+    parts[i].boundsMin = topLeftFront+current.position;
+    parts[i].boundsMax = bottomRightFront+current.position;
 
     parts[i]._effector.flowMagnitude = parts[i]._flow;
   }
 
-  private void InitializeTrianglesAndNormalsForMesh(int i)
-  {
+  private void InitializeTrianglesAndNormalsForMesh(int i) {
     Mesh mesh = parts[i].mesh;
     if (mesh == null) return;
 
     // Normals
     var uvs = new Vector2[mesh.vertices.Length];
-		//Debug.Log (uvs);
-    for (int i2 = 0; i2 < uvs.Length; i2++)
-    {
-      uvs[i2] = new Vector2(mesh.vertices[i2].x, mesh.vertices[i2].z);
-			//Debug.Log (mesh.vertices [i2].x);
-    }
+
+    for (int i2 = 0; i2<uvs.Length; i2++) uvs[i2] = new Vector2(mesh.vertices[i2].x, mesh.vertices[i2].z);
     mesh.uv = uvs;
 
-    // Triangles
     mesh.triangles = new int[] { 5, 4, 0, 0, 1, 5, 0, 2, 3, 3, 1, 0 };
-
-    // For shader
-    mesh.RecalculateNormals();
+    mesh.RecalculateNormals(); //For shader
   }
 
-  void Update()
-  {
-#if UNITY_EDITOR
-    // Size has been updated?
-    if (Width != size || Height != currentHeight)
-    {
-      cleanRequested = true;
-    }
+  void Update() {
 
-    // Recalculate everything!
-    // This should be for the editor only!
-    if (cleanRequested)
-    {
-      cleanRequested = false;
-      //Debug.Log("Reinitializing water. Make sure we are in editor mode!");
-      Clear();
-      Initialize();
-    }
-
-    color = material.color;
-		//mycode
-		if(Input.GetButtonDown ("Fire1")){
-			Splash(size / 2, 10);
-		}
-
-#endif
+    //Debug
+    if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 1.0f);
 
 	//Update model state
-	for (int i = 1; i < size - 1; i++) {
-      WaterLinePart theBeforePart = parts[i - 1];
+	for (int i = 1, size = parts.Length; i < size-1; i++) {
+      WaterLinePart theBeforePart = parts[i-1];
 	  WaterLinePart thePart = parts[i];
-	  WaterLinePart theAfterPart = parts[i + 1];
-	
-      float theBeforeDelta = theBeforePart._heightOld - thePart._heightOld;
-      float theAfterDelta = theAfterPart._heightOld - thePart._heightOld;
+	  WaterLinePart theAfterPart = parts[i+1];
 
+      //Get force	
+      float theBeforeDelta = theBeforePart._heightOld-thePart._heightOld;
+      float theAfterDelta = theAfterPart._heightOld-thePart._heightOld;
+      float theForce = theBeforeDelta+theAfterDelta;
+            
+      //Update speed
       thePart._speed *= 0.99f;
+	  thePart._speed += theForce*0.005f;
 
-      float theForce = theBeforeDelta * 0.5f + theAfterDelta * 0.5f;
-	  thePart._speed += theForce * 0.1f;
-
-      thePart._heightNew = thePart._heightOld + thePart._speed;
+      //Update next position
+      thePart._heightNew = thePart._heightOld+thePart._speed;
     }
 
     //Update view
-    for (int i = 0; i < size; i++) {
+    for (int i = 0, size = parts.Length; i<size; i++) {
       // Update the dot position
       Vector3 newPosition = new Vector3(
           parts[i].gameObject.transform.localPosition.x,
@@ -248,60 +181,10 @@ public class WaterLine : MonoBehaviour
     }
 
 	//Prepare next model state
-    for (int i = 0; i < size; i++) {
-       parts[i]._heightOld = parts[i]._heightNew;
-    }
+    for (int i = 0, size = parts.Length; i < size; i++) parts[i]._heightOld = parts[i]._heightNew;
 
     // Update meshes
-    for (int i = 0; i < size; i++) {
-      UpdateMeshVertices(i);
-    }
-
-	return;
-
-	//=========================================================================================
-    // Water tension is simulated by a simple linear convolution over the height field.
-    for (int i = 1; i < size - 1; i++)
-    {
-#if UNITY_EDITOR
-      // Objects deleted from editor
-      if (parts[i].gameObject == null)
-      {
-        cleanRequested = true;
-        return;
-      }
-#endif
-      int j = i - 1;
-      int k = i + 1;
-      parts[i].height = (parts[i].gameObject.transform.localPosition.y + parts[j].gameObject.transform.localPosition.y + parts[k].gameObject.transform.localPosition.y) / 3.0f;
-
-	  //parts[i].flow = (parts[i].flow + parts[j].flow - parts[k].flow) / 3.0f;
-    }
-
-    // Velocity and height are updated... 
-    for (int i = 0; i < size; i++)
-    {
-      // update velocity and height
-      parts[i].velocity = (parts[i].velocity + (parts[i].height - parts[i].gameObject.transform.localPosition.y)) * velocityDamping;
-
-      float timeFactor = Time.deltaTime * timeScale;
-      if (timeFactor > 1f) timeFactor = 1f;
-
-      parts[i].height += parts[i].velocity * timeFactor;
-
-      // Update the dot position
-      Vector3 newPosition = new Vector3(
-          parts[i].gameObject.transform.localPosition.x,
-          parts[i].height,
-          parts[i].gameObject.transform.localPosition.z);
-      parts[i].gameObject.transform.localPosition = newPosition;
-    }
-
-    // Update meshes
-    for (int i = 0; i < size; i++)
-    {
-      UpdateMeshVertices(i);
-    }
+    for (int i = 0, size = parts.Length; i < size; i++) UpdateMeshVertices(i);
   }
 
   #region Interaction
@@ -311,37 +194,28 @@ public class WaterLine : MonoBehaviour
   /// </summary>
   /// <param name="location"></param>
   /// <param name="force"></param>
-  public void Splash(Vector3 location, int force)
-  {
-    // Find the touched part
-    for (int i = 0; i < (size - 1); i++)
-    {
-      if (location.x >= parts[i].boundsMin.x
-        && location.x < parts[i].boundsMax.x)
-      {
-        if (location.y <= parts[i].boundsMin.y
-       && location.y > parts[i].boundsMax.y)
-        {
-          Splash(i, force);
-        }
-      }
-    }
+//  public void Splash(Vector3 location, int force) {
+//    for (int i = 0, size = parts.Length; i<size-1; i++) {
+//      if (location.x>=parts[i].boundsMin.x && location.x<parts[i].boundsMax.x &&
+//          location.y<=parts[i].boundsMin.y && location.y>parts[i].boundsMax.y)
+//                Splash(i, force);
+//    }
+//  }
 
-  }
+  public void Splash(float inX, float inHeight) {
+    int theIndex = getPartIndexByPosition(inX);
+    if (theIndex < 0 || theIndex > parts.Length) return;
 
-  private void Splash(int i, int heightModifier)
-  {
-        //parts[i].gameObject.transform.localPosition = new Vector3(
-        //  parts[i].gameObject.transform.localPosition.x,
-        //  parts[i].gameObject.transform.localPosition.y + heightModifier,
-        //  parts[i].gameObject.transform.localPosition.z
-        //  );
-
-        parts[i]._heightOld = 3;
-
+    parts[theIndex-1]._heightOld = -inHeight/2;
+    parts[theIndex]._heightOld = -inHeight;
+    parts[theIndex+1]._heightOld = -inHeight/2;
 
     //parts[i].flow = 30;
-    }
+  }
+
+  private int getPartIndexByPosition(float inPosition) {
+    return Mathf.FloorToInt((inPosition + width/2)/partSize);
+  }
 
   #endregion
 }
