@@ -21,8 +21,9 @@ public class SplashSource : MonoBehaviour {
             float theSpeed = theRigid.velocity.magnitude;
 
 			if (theSpeed > limitSpeed) {
-                var theWaterScript = other.gameObject.transform.parent.gameObject.GetComponent<WaterLine>();
-				theWaterScript.Splash(transform.position.x, theSpeed * impulseK);
+                var theWaterPart = other.gameObject.transform.parent.gameObject;
+                var theWaterScript = theWaterPart.GetComponent<WaterLine>();
+				theWaterScript.Splash(transform.position.x - theWaterPart.transform.position.x, theSpeed * impulseK);
             }
         }
     }		

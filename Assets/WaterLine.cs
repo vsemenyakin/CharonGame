@@ -230,6 +230,7 @@ public class WaterLine : MonoBehaviour
 
   public void Splash(float inX, float inHeight) {
     int theIndex = getPartIndexByPosition(inX);
+
     if (theIndex < 1 || theIndex >= parts.Length-1) return;
 
     //parts[theIndex-1]._heightOld = -inHeight/2;
@@ -241,10 +242,12 @@ public class WaterLine : MonoBehaviour
 
     int theGauseSize = (int)(theSplashWidth/partSize);
     float theCoefficient = inHeight/(theSplashWidth*theSplashWidth*4);
-    
+
     for (int i = -theGauseSize/2; i < theGauseSize/2; ++i) {
         int theGauseIndex = theIndex + i;
         if (theGauseIndex < 1 || theGauseIndex >= parts.Length - 1) continue;
+
+        Debug.Log("GAUSE INDEX: " + theGauseIndex);
 
         parts[theGauseIndex]._heightOld = i*i*theCoefficient*partSize - theSplashHeight;
     }
@@ -254,7 +257,7 @@ public class WaterLine : MonoBehaviour
   }
 
   private int getPartIndexByPosition(float inPosition) {
-    return Mathf.FloorToInt((inPosition)/partSize);
+    return Mathf.FloorToInt(inPosition/partSize);
   }
 
   #endregion
