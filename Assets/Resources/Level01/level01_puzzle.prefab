@@ -816,7 +816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   limitSpeed: 4
-  impulseK: 0.1
+  impulseK: 0.12
   castingFlow: 500
 --- !u!212 &212025440592241828
 SpriteRenderer:

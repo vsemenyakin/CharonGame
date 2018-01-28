@@ -9,6 +9,12 @@ public class SplashSource : MonoBehaviour {
 
 	public float castingFlow = 100.0f;
 
+	public ISplashListener listener = null;
+
+	private bool _processed = false;
+
+	public bool disableOnActivate = true;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -18,6 +24,8 @@ public class SplashSource : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D other) {
+		if (_processed && disableOnActivate) return;
+
         if (other.gameObject.tag.Equals("waterPart")) {
             var theRigid = GetComponent<Rigidbody2D>();
 			float theSpeed = Mathf.Abs(theRigid.velocity.y);
@@ -27,6 +35,10 @@ public class SplashSource : MonoBehaviour {
                 var theWaterScript = theWaterPart.GetComponent<WaterLine>();
 
 				theWaterScript.Splash(transform.position.x - theWaterPart.transform.position.x, theSpeed * impulseK, castingFlow);
+
+				if (null != listener) listener.OnSplashed();
+
+				_processed = true;
             }
         }
     }		

@@ -37,9 +37,7 @@ public class GameController : MonoBehaviour {
 				i++;
 			}
 		}
-	
 	}
-
 
 	void  SearchWaterLine (){
 		GameObject[] waterBlockGameObjects;
@@ -50,7 +48,9 @@ public class GameController : MonoBehaviour {
 		}
 	}
 	
-
-
-
+	public void ForceSetGlobalFlow(float inFlow) {
+		foreach (WaterLine wt in waterLineList) {
+			wt.setDefaultFlow(inFlow) ;
+		}	   	
+	}
 }

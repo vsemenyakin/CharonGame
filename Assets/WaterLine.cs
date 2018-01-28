@@ -73,7 +73,7 @@ public class WaterLine : MonoBehaviour
 	  GameObject theGameObject = new GameObject("WavePart_" + i);
       theGameObject.tag = "waterPart";
       theGameObject.transform.parent = this.transform;
-      theGameObject.transform.localPosition = new Vector3(i*partSize, 0, 0);
+      theGameObject.transform.localPosition = new Vector3(i*partSize, 0, -1);
 
       //Physics
 	  PolygonCollider2D polygonCollider2D = theGameObject.AddComponent<PolygonCollider2D>();
@@ -120,12 +120,12 @@ public class WaterLine : MonoBehaviour
     Vector3 right = next.localPosition - current.localPosition;
 
     // Get all parts of the mesh (it's just 2 planes, one on top and one on the front face)
-    Vector3 topLeftFront = new Vector3(left.x, left.y, 0);
-    Vector3 topRightFront = new Vector3(right.x, right.y, 0);
-    Vector3 topLeftBack = new Vector3(left.x, left.y, 1);
-    Vector3 topRightBack = new Vector3(right.x, right.y, 1);
-    Vector3 bottomLeftFront = new Vector3(left.x, left.y + (0 - height), 0);
-    Vector3 bottomRightFront = new Vector3(right.x, right.y + (0 - height), 0);
+    Vector3 topLeftFront = new Vector3(left.x, left.y, -1);
+    Vector3 topRightFront = new Vector3(right.x, right.y, -1);
+    Vector3 topLeftBack = new Vector3(left.x, left.y, -1);
+    Vector3 topRightBack = new Vector3(right.x, right.y, -1);
+    Vector3 bottomLeftFront = new Vector3(left.x, left.y + (0 - height), -1);
+    Vector3 bottomRightFront = new Vector3(right.x, right.y + (0 - height), -1);
 
     PolygonCollider2D polygonCollider = parts [i].gameObject.GetComponent<PolygonCollider2D> ();
     Vector2[] pointsCollider = new Vector2[]{
@@ -209,7 +209,7 @@ public class WaterLine : MonoBehaviour
 	//Add idle waves
 
 	if (Random.value < idleWavesIntensity) {
-		Splash(Random.value * width, idleWavesPower * Random.value, 100.0f);
+		Splash(Random.value * width, idleWavesPower * Random.value, 0.0f);
 	}
   }
 
@@ -250,10 +250,11 @@ public class WaterLine : MonoBehaviour
         parts[theGauseIndex]._heightOld = i*i*theCoefficient*partSize - theSplashHeight;
     }
 
-    Debug.Log(inFlowImpulse);
+    //Debug.Log(inFlowImpulse);
     
 	parts[theIndex - 1]._flowOld = -inFlowImpulse*inHeight;
-    parts[theIndex + 1]._flowOld = inFlowImpulse*inHeight;
+	parts[theIndex]._flowOld = inFlowImpulse*inHeight;
+	parts[theIndex + 1]._flowOld = inFlowImpulse*inHeight;
   }
 
   private int getPartIndexByPosition(float inPosition) {

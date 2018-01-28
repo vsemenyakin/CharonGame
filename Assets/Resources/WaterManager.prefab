@@ -55,4 +55,4 @@ MonoBehaviour:
   blockToCopy: {fileID: 1874876333666784, guid: 254fb107f72dfc840b64a974e159f51f,
     type: 2}
   frameSize: 18
-  blockSize: 28
+  blockSize: 29.1

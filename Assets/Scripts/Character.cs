@@ -91,7 +91,7 @@ public class Character : Unit {
 		Collider2D[] colliders = Physics2D.OverlapCircleAll (playerPosition, 0.1F);
 
 		isGrounded = colliders.Length > 1;
-		Debug.Log (State);
+		//Debug.Log (State);
 		
 
 		if(!isGrounded) State = CharState.Jump;
