@@ -73,7 +73,7 @@ public class WaterLine : MonoBehaviour
 	  GameObject theGameObject = new GameObject("WavePart_" + i);
       theGameObject.tag = "waterPart";
       theGameObject.transform.parent = this.transform;
-      theGameObject.transform.localPosition = new Vector3(i*partSize-width/2, 0, 0);
+      theGameObject.transform.localPosition = new Vector3(i*partSize, 0, 0);
 
       //Physics
 	  PolygonCollider2D polygonCollider2D = theGameObject.AddComponent<PolygonCollider2D>();
@@ -209,7 +209,7 @@ public class WaterLine : MonoBehaviour
 	//Add idle waves
 
 	if (Random.value < idleWavesIntensity) {
-		Splash(-width/2 + Random.value * width, idleWavesPower * Random.value);
+		Splash(Random.value * width, idleWavesPower * Random.value);
 	}
   }
 
@@ -254,7 +254,7 @@ public class WaterLine : MonoBehaviour
   }
 
   private int getPartIndexByPosition(float inPosition) {
-    return Mathf.FloorToInt((inPosition + width/2)/partSize);
+    return Mathf.FloorToInt((inPosition)/partSize);
   }
 
   #endregion
