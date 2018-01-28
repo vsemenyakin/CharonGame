@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SplashSource : MonoBehaviour {
 
+	public float limitSpeed = 3.0f;
+	public float impulseK = 0.2f;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -17,9 +20,9 @@ public class SplashSource : MonoBehaviour {
             var theRigid = GetComponent<Rigidbody2D>();
             float theSpeed = theRigid.velocity.magnitude;
 
-            if (theSpeed > 3.0f) {
+			if (theSpeed > limitSpeed) {
                 var theWaterScript = other.gameObject.transform.parent.gameObject.GetComponent<WaterLine>();
-                theWaterScript.Splash(transform.position.x, theSpeed / 5.0f);
+				theWaterScript.Splash(transform.position.x, theSpeed * impulseK);
             }
         }
     }		
