@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Collider
   - waterPart
+  - CanvasText
+  - waterBlock
   layers:
   - Default
   - TransparentFX

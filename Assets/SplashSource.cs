@@ -7,6 +7,8 @@ public class SplashSource : MonoBehaviour {
 	public float limitSpeed = 3.0f;
 	public float impulseK = 0.2f;
 
+	public float castingFlow = 100.0f;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -23,7 +25,8 @@ public class SplashSource : MonoBehaviour {
 			if (theSpeed > limitSpeed) {
                 var theWaterPart = other.gameObject.transform.parent.gameObject;
                 var theWaterScript = theWaterPart.GetComponent<WaterLine>();
-				theWaterScript.Splash(transform.position.x - theWaterPart.transform.position.x, theSpeed * impulseK);
+
+				theWaterScript.Splash(transform.position.x - theWaterPart.transform.position.x, theSpeed * impulseK, castingFlow);
             }
         }
     }		

@@ -11,29 +11,34 @@ public class DialogSystem : MonoBehaviour {
 
     public Text dialogue_Text;
 
+	public List<float> xCameraTrigger;
 
-    DialogSettings dialogue;
+	private DialogSettings dialogue;
 
+	private GameObject mainCamera;
 
 
 	
 	void Start () {
         dialogue = DialogSettings.Load(asset);
+		mainCamera = GameObject.FindWithTag ("MainCamera");
 
         //character_image.GetComponent<Animator>().SetTrigger("go");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        dialogue_Text.text = dialogue.nodes[i].text;
+		if (dialogue.nodes.Length-1 >= i)
+			Next ();
         
 	}
 
     public void Next()
     {
-        if(i< dialogue.nodes.Length-1)
-            
-                i++;
+		if (mainCamera.transform.position.x >= xCameraTrigger [i]  ) {
+			dialogue_Text.text = dialogue.nodes [i].text;
+			i++;
+		}
 		else if (i == dialogue.nodes.Length - 1)
             {
 			i = dialogue.nodes.Length - 1;

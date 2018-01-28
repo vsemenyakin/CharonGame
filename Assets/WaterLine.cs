@@ -157,7 +157,7 @@ public class WaterLine : MonoBehaviour
   void Update() {
 
     //Debug
-    if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 3.0f);
+    //if(Input.GetButtonDown ("Fire1")) Splash(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, 3.0f, 100.0f);
     
 	//Update model state
 	for (int i = 1, size = parts.Length; i < size-1; i++) {
@@ -209,7 +209,7 @@ public class WaterLine : MonoBehaviour
 	//Add idle waves
 
 	if (Random.value < idleWavesIntensity) {
-		Splash(Random.value * width, idleWavesPower * Random.value);
+		Splash(Random.value * width, idleWavesPower * Random.value, 100.0f);
 	}
   }
 
@@ -228,7 +228,7 @@ public class WaterLine : MonoBehaviour
 //    }
 //  }
 
-  public void Splash(float inX, float inHeight) {
+  public void Splash(float inX, float inHeight, float inFlowImpulse) {
     int theIndex = getPartIndexByPosition(inX);
 
     if (theIndex < 1 || theIndex >= parts.Length-1) return;
@@ -247,13 +247,13 @@ public class WaterLine : MonoBehaviour
         int theGauseIndex = theIndex + i;
         if (theGauseIndex < 1 || theGauseIndex >= parts.Length - 1) continue;
 
-        Debug.Log("GAUSE INDEX: " + theGauseIndex);
-
         parts[theGauseIndex]._heightOld = i*i*theCoefficient*partSize - theSplashHeight;
     }
+
+    Debug.Log(inFlowImpulse);
     
-    parts[theIndex - 1]._flowOld = -100*inHeight;
-    parts[theIndex + 1]._flowOld = 100*inHeight;
+	parts[theIndex - 1]._flowOld = -inFlowImpulse*inHeight;
+    parts[theIndex + 1]._flowOld = inFlowImpulse*inHeight;
   }
 
   private int getPartIndexByPosition(float inPosition) {
@@ -261,4 +261,6 @@ public class WaterLine : MonoBehaviour
   }
 
   #endregion
+
+  public void setDefaultFlow(float inFlow) { defaultFlow = inFlow; }
 }
