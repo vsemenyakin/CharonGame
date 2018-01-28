@@ -21,7 +21,7 @@ public class LongWorldLayerManager : MonoBehaviour {
         _blockB = GameObject.Instantiate(blockToCopy);
     }
 
-    private void Update() { updateForFrames(); }
+    private void FixedUpdate() { updateForFrames(); }
     
     void updateForFrames() {
         float theFrameBegin = (Camera.main.transform.position.x - frameSize/2)*paralaxFactor;
