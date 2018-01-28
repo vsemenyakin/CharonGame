@@ -48,8 +48,11 @@ public class Character : Unit {
 		if(isGrounded) State = CharState.Idle;
 
 
-		if (Input.GetButton ("Horizontal"))
+		if (Input.GetButton ("Horizontal")) {
+			if(isGrounded) State = CharState.Run;
 			Run ();
+		}
+			
 		if (isGrounded && Input.GetButtonDown ("Jump"))
 			Jump ();
 	}
@@ -62,7 +65,7 @@ public class Character : Unit {
 
 		sprite.flipX = direction.x < 0.0F;
 
-		if(isGrounded) State = CharState.Run;
+
 	}
 
 	private void Jump()
