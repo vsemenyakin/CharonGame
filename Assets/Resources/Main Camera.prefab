@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1564007218075430
 GameObject:
   m_ObjectHideFlags: 1
@@ -44,7 +44,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1785864848414894
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,7 +80,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1831955228955888
 GameObject:
   m_ObjectHideFlags: 1
@@ -415,21 +415,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boundsTop: 30
-  boundsBottom: 12.5
+  boundsBottom: 13
   boundsLeft: -10
   boundsRight: 260
   movementFromBase: {x: 0, y: 0}
   baseLocation: {x: 0, y: 0}
   layerSpeeds:
   - 0
-  - 1.58
-  - 0.66
-  - 0
   layers:
   - {fileID: 1831955228955888}
-  - {fileID: 1795382333085234}
-  - {fileID: 1564007218075430}
-  - {fileID: 1100308154743280}
 --- !u!124 &124664794691480076
 Behaviour:
   m_ObjectHideFlags: 1

@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -85,18 +85,18 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
+    m_FontSize: 18
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 0
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: "-I\u2026 I don\u2019t. How could I forget?\n"
 --- !u!114 &114132895968045844
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,6 +127,11 @@ MonoBehaviour:
   - 170
   - 190
   - 210
+  - 215
+  - 223
+  - 232
+  - 239
+  - 244
 --- !u!114 &114143195999786534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -139,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -250,15 +255,15 @@ RectTransform:
   m_GameObject: {fileID: 1708309398128484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0749999, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224153077949346854}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 45, y: 3.92}
-  m_SizeDelta: {x: 250.09, y: 22.15}
+  m_AnchoredPosition: {x: 0, y: 48}
+  m_SizeDelta: {x: 550.9, y: 56.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224448050273992120
 RectTransform:
