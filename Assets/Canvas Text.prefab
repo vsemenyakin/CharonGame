@@ -110,6 +110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   asset: {fileID: 4900000, guid: 2e0be0391037b2042ad27598b276d4cf, type: 3}
   dialogue_Text: {fileID: 114057379424218126}
+  xCameraTrigger:
+  - 0
+  - 9
+  - 19
+  - 29
+  - 39
+  - 49
+  - 53.5
+  - 68
+  - 80
+  - 95
+  - 110
+  - 130
+  - 150
+  - 170
+  - 190
+  - 210
 --- !u!114 &114143195999786534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,8 +257,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 45, y: 3.92}
+  m_SizeDelta: {x: 250.09, y: 22.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224448050273992120
 RectTransform:

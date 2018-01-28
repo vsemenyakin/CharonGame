@@ -57,7 +57,7 @@ MonoBehaviour:
   timeScale: 10
   partMass: 100
   disasiasion: 0.01
-  defaultFlow: 0
+  defaultFlow: 12
   material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   color: {r: 0, g: 0, b: 1, a: 1}
   idleWavesPower: 0

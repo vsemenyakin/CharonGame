@@ -1,27 +1,108 @@
 <dialogue>
 
 <node>
-<text>Step right up, wandering soul
+<text>-Step right up, wandering soul.
 </text>
+<color>choron</color>
 </node>
 <node>
-<text>Where am I?
+<text>-Where am I?
 </text>
+<color>player</color>
 </node>
 <node>
-<text>What does the coin tell you?
+<text>-What does the coin tell you?
 </text>
+<color>choron</color>
 </node>
 <node>
-<text>It whispers… Am I dead?
+<text>-It whispers… Am I dead?
 </text>
+<color>player</color>
 </node>
 <node>
-<text>Looks like your riches couldn’t save you.
+<text>-Looks like your riches couldn’t save you.
 </text>
+<color>choron</color>
 </node>
 <node>
 <text>Get in and watch your step.
 </text>
+<color>choron</color>
+</node>
+<node>
+<text>-Just hurry up and get me to the other side.
+</text>
+<color>player</color>
+</node>
+<node>
+<text>How long does it take to get there?
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-It depends on you.
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>-What is this?
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-Memories. Feelings. Something that prevents you from passing.
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>Remember friendship? All those people, who helped you get to the top?
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>-I… I don’t. How could I forget?
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-What about love? Does your memory treasure the moments you’ve spent with her?
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>-I do not remember! Why can’t I remember?
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-Remember your son.
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>-Stop.
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-So you do remember him.
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>-Now I remember. There is no point in moving forward.
+</text>
+<color>player</color>
+</node>
+<node>
+<text>-No point in staying here either. Not only you’ll be trapped with this imagery.
+</text>
+<color>choron</color>
+</node>
+<node>
+<text>But you’ll never get to the other side.
+</text>
+<color>choron</color>
 </node>
 </dialogue>

@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lives: 5
   speed: 4
-  jumpForce: 15
+  jumpForce: 11
 --- !u!212 &212095661373215136
 SpriteRenderer:
   m_ObjectHideFlags: 1

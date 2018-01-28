@@ -37,6 +37,12 @@ public class DialogSystem : MonoBehaviour {
     {
 		if (mainCamera.transform.position.x >= xCameraTrigger [i]  ) {
 			dialogue_Text.text = dialogue.nodes [i].text;
+			if (dialogue.nodes [i].color == "player") {
+				dialogue_Text.color = Color.white;
+			}
+			if (dialogue.nodes [i].color == "choron") {
+				dialogue_Text.color = Color.black;
+			}
 			i++;
 		}
 		else if (i == dialogue.nodes.Length - 1)

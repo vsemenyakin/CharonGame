@@ -27,6 +27,9 @@ public class Node
     [XmlElement("text")]
     public string text;
 
+	[XmlElement("color")]
+	public string color;
+
     
 }
 
