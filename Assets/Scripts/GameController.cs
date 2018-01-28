@@ -10,7 +10,10 @@ public class GameController : MonoBehaviour {
 	public float[] xCameraTriggerFlow;
 	public float[] flowList;
 	public Transform targetCamera;
-	//for call function SearchWaterLine
+
+	public MusicRules musicRules;
+
+
 
 
 
@@ -22,8 +25,8 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
 		Invoke ("SearchWaterLine", 1f);
+		musicRules.audioList [0].Play();
 		
 	}
 	
@@ -37,7 +40,9 @@ public class GameController : MonoBehaviour {
 				i++;
 			}
 		}
-	}
+
+
+		}
 
 	void  SearchWaterLine (){
 		GameObject[] waterBlockGameObjects;
@@ -51,6 +56,7 @@ public class GameController : MonoBehaviour {
 	public void ForceSetGlobalFlow(float inFlow) {
 		foreach (WaterLine wt in waterLineList) {
 			wt.setDefaultFlow(inFlow) ;
+
 		}	   	
 	}
 }

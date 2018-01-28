@@ -36,7 +36,10 @@ public class SplashSource : MonoBehaviour {
 
 				theWaterScript.Splash(transform.position.x - theWaterPart.transform.position.x, theSpeed * impulseK, castingFlow);
 
-				if (null != listener) listener.OnSplashed();
+				if (null != listener) {
+					listener.OnSplashed ();
+					//Debug.Log("!!!!! - 0");
+				}
 
 				_processed = true;
             }

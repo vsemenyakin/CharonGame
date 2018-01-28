@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: dbaf093bfd37f15498c6f4e852d392e8
+timeCreated: 1517148316
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Shonar Bangla
+  fontNames:
+  - Shonar Bangla
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

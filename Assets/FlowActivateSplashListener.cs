@@ -8,6 +8,7 @@ public class FlowActivateSplashListener : ISplashListener {
 	public float flow = 50.0f;
 
 	override public void OnSplashed() {
+		//Debug.Log("!!!!! - 1");
 		gameController.ForceSetGlobalFlow(flow);
 	}
 }
