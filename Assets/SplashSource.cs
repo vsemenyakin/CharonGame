@@ -20,7 +20,7 @@ public class SplashSource : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag.Equals("waterPart")) {
             var theRigid = GetComponent<Rigidbody2D>();
-            float theSpeed = theRigid.velocity.magnitude;
+			float theSpeed = Mathf.Abs(theRigid.velocity.y);
 
 			if (theSpeed > limitSpeed) {
                 var theWaterPart = other.gameObject.transform.parent.gameObject;

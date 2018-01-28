@@ -232,7 +232,7 @@ Prefab:
     - target: {fileID: 114521337437010420, guid: 2d7dc34d75db59c4aa75dba7f6251470,
         type: 2}
       propertyPath: castingFlow
-      value: 400
+      value: 500
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d7dc34d75db59c4aa75dba7f6251470, type: 2}
