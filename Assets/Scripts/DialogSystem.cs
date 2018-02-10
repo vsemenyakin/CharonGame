@@ -9,7 +9,12 @@ public class DialogSystem : MonoBehaviour {
 
     int i = 0;
 
-    public Text dialogue_Text;
+    public Text curDialogue_Text;
+	public Text moveDialogue_Text = null;
+	public Text prevDialogue_Text = null;
+	private Animator curDialogueTextController;
+	private Animator moveDialogueTextController;
+	private Animator prevDialogueTextController;
 
 	public List<float> xCameraTrigger;
 
@@ -22,6 +27,11 @@ public class DialogSystem : MonoBehaviour {
 	void Start () {
         dialogue = DialogSettings.Load(asset);
 		mainCamera = GameObject.FindWithTag ("MainCamera");
+
+		// get animator from text
+		curDialogueTextController = curDialogue_Text.GetComponent<Animator>();
+		moveDialogueTextController = moveDialogue_Text.GetComponent<Animator>();
+		prevDialogueTextController = prevDialogue_Text.GetComponent<Animator> ();
 
         //character_image.GetComponent<Animator>().SetTrigger("go");
 	}
@@ -36,12 +46,13 @@ public class DialogSystem : MonoBehaviour {
     public void Next()
     {
 		if (mainCamera.transform.position.x >= xCameraTrigger [i]  ) {
-			dialogue_Text.text = dialogue.nodes [i].text;
+			PlayTextAnimation ();
+			curDialogue_Text.text = dialogue.nodes [i].text;
 			if (dialogue.nodes [i].color == "player") {
-				dialogue_Text.color = Color.white;
+				curDialogue_Text.color = Color.white;
 			}
 			if (dialogue.nodes [i].color == "choron") {
-				dialogue_Text.color = Color.black;
+				curDialogue_Text.color = Color.black;
 			}
 			i++;
 		}
@@ -53,5 +64,16 @@ public class DialogSystem : MonoBehaviour {
         
 
     }
+
+	void PlayTextAnimation(){
+		// change text and color using current text
+		prevDialogue_Text.text = moveDialogue_Text.text;
+		prevDialogue_Text.color = moveDialogue_Text.color;
+		moveDialogue_Text.text = curDialogue_Text.text;
+		moveDialogue_Text.color = curDialogue_Text.color;
+		curDialogueTextController.SetTrigger ("go");
+		moveDialogueTextController.SetTrigger ("go");
+		prevDialogueTextController.SetTrigger ("go");
+	}
 
 }
